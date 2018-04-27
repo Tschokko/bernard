@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <link rel="stylesheet"
+          href="../../static/assets/css/styles.css"
+          th:href="@{/assets/css/styles.css}"/>
+
+    <title>OAM Agent Demonstrator</title>
+</head>
+<body>
+
+<div class="subnav box-shadow sticky-top" th:fragment="subnav(activeTab)">
+    <nav class="nav nav-underline">
+        <a class="nav-link" th:class="${activeTab == 'accounts'}? 'nav-link active' : 'nav-link'" href="#" th:href="@{/manage/accounts}">Kundenkonten</a>
+        <a class="nav-link" th:class="${activeTab == 'devices'}? 'nav-link active' : 'nav-link'" href="#" th:href="@{/manage/devices}">SIM-Karten</a>
+        <a class="nav-link" th:class="${activeTab == 'settings'}? 'nav-link active' : 'nav-link'" href="#">Einstellungen</a>
+    </nav>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        th:src="@{/webjars/popper.js/1.12.9/umd/popper.js}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>
+</body>
+</html>

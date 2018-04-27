@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <link rel="stylesheet"
+          href="../static/assets/css/styles.css"
+          th:href="@{/assets/css/styles.css}"/>
+
+    <title>OAM Agent Demonstrator</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-insys-blue"
+     th:replace="fragments/navbar :: navbar('error')">
+    <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container-fluid">
+    <div class="bg-white box-shadow p-3">
+        <h3>Es ist ein Fehler aufgetreten.</h3>
+        <table class="table table-bordered mt-3 pb-0" style="width:100%; table-layout:fixed">
+            <tr>
+                <th scope="row" style="width: 20%;">Zeit</th>
+                <td th:text="${timestamp}"></td>
+            </tr>
+            <tr>
+                <th scope="row">Fehler</th>
+                <td><span th:text="${error}"></span></td>
+            </tr>
+            <tr>
+                <th scope="row">Status</th>
+                <td th:text="${status}"></td>
+            </tr>
+            <tr>
+                <th scope="row">Fehlermeldung</th>
+                <td th:text="${message}"></td>
+            </tr>
+            <tr>
+                <th scope="row">Exception</th>
+                <td th:text="${exception}"></td>
+            </tr>
+            <tr>
+                <th scope="row">Trace</th>
+                <td><pre th:text="${trace}" style="margin:0; overflow:scroll"></pre></td>
+            </tr>
+        </table>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <span>&copy; 2018 INSYS MICROELECTRONICS GmbH</span>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        th:src="@{/webjars/popper.js/1.12.9/umd/popper.js}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>
+</body>
+</html>
