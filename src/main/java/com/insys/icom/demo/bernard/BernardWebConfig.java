@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableWebMvc
 public class BernardWebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -16,7 +15,7 @@ public class BernardWebConfig implements WebMvcConfigurer {
                 .addResourceLocations("/webjars/");
     }
 
-    @Override
+    /*@Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")
@@ -26,5 +25,5 @@ public class BernardWebConfig implements WebMvcConfigurer {
                         "Authorization", "X-Auth-Token")
                 .exposedHeaders("X-Auth-Token", "Authorization")
                 .allowedMethods("POST", "GET", "DELETE", "PUT", "OPTIONS", "HEAD");
-    }
+    }*/
 }
