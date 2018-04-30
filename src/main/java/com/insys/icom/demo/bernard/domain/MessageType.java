@@ -12,7 +12,12 @@ public enum MessageType {
     HELLO(1),
     WELCOME(2),
     ABORT(3),
-    PING(4);
+    PING(4),
+    ERROR(9),
+    CALL(10),
+    RESULT(11),
+    PUBLISH(20),
+    PUBLISHED(21);
 
     @Getter
     private int value;

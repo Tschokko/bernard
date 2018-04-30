@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import lombok.Builder;
 import lombok.Data;
@@ -22,5 +24,13 @@ public class WebSocketSessionInfo {
 
     public boolean hasRealm() {
         return !Strings.isNullOrEmpty(realm);
+    }
+
+    public static Optional<WebSocketSessionInfo> findBySession(List<WebSocketSessionInfo> sessionInfoList, WebSocketSession session) {
+        for (WebSocketSessionInfo sessionInfo : sessionInfoList) {
+            if (sessionInfo.getSession() != null && sessionInfo.getSession().getId().equals(session.getId()))
+                return Optional.of(sessionInfo);
+        }
+        return Optional.empty();
     }
 }

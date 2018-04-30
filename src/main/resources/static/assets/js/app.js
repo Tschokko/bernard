@@ -1,4 +1,5 @@
 var ws;
+var requestId = 1;
 
 function setConnected (connected) {
     $("#connect").prop("disabled", connected);
@@ -6,6 +7,7 @@ function setConnected (connected) {
 
     $("#btnHello").prop("disabled", !connected);
     $("#btnInvalid").prop("disabled", !connected);
+    $("#btnPing").prop("disabled", !connected);
     $("#btnEventProfileActivated").prop("disabled", !connected);
 
     if (connected) {
@@ -25,6 +27,13 @@ function connect () {
     ws = new WebSocket('ws://localhost:8080/ws');
     ws.onmessage = function(data){
         showGreeting(data.data);
+    };
+    ws.onclose = function (ev) {
+        disconnect();
+    };
+    ws.onerror = function (ev) {
+        console.log("WebSocket error: " + ev);
+        disconnect();
     };
     setConnected(true);
 }
@@ -71,6 +80,9 @@ function parseIncomingMessage (textMessage) {
         else if (rawMessage[0] == 3) {
             addMessageToContainer("ABORT", textMessage, "danger");
         }
+        else if (rawMessage[0] == 21) {
+            addMessageToContainer("PUBLISHED", textMessage, "success");
+        }
     }
 }
 
@@ -88,6 +100,26 @@ function sendInvalid () {
     var data = JSON.stringify(invalidMessage);
     ws.send(data);
     addMessageToContainer("WELCOME", data, "warning");
+}
+
+function sendPing () {
+    var pingMessage = [4, {}];
+    var data = JSON.stringify(pingMessage);
+    ws.send(data);
+    addMessageToContainer("PING", data, "dark");
+}
+
+
+function sendPublishProfileActivated () {
+    var deviceId = $("#inputDeviceId").val();
+    var timestamp = new Date();
+    var publishMessage = [20, requestId, "events::devices", {"device_id": deviceId, "event": "PROFILE_ACTIVATED", "timestamp": timestamp.toISOString()}];
+    var data = JSON.stringify(publishMessage);
+    ws.send(data);
+
+    requestId += 1;
+
+    addMessageToContainer("PUBLISH", data, "info");
 }
 
 function dismissMessages () {
@@ -108,7 +140,13 @@ $(function () {
     $("#btnInvalid").click(function () {
         sendInvalid();
     });
+    $("#btnPing").click(function () {
+        sendPing();
+    });
+    $("#btnEventProfileActivated").click(function () {
+        sendPublishProfileActivated();
+    });
     $("#btnDismissMessages").click(function () {
         dismissMessages();
-    })
+    });
 });

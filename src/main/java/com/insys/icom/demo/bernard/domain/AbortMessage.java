@@ -16,6 +16,7 @@ import lombok.Data;
 public class AbortMessage implements Message {
     public final static String ERR_INVALID_SESSION = "ERR_INVALID_SESSION";
     public final static String ERR_PROTOCOL_VIOLATION = "ERR_PROTOCOL_VIOLATION";
+    public final static String ERR_NO_SUCH_REALM = "ERR_NO_SUCH_REALM";
 
     private String reason;
     private Details details;
