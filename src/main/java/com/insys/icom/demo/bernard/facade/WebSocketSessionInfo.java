@@ -17,6 +17,7 @@ import lombok.Data;
 @Data
 @Builder
 public class WebSocketSessionInfo {
+    private Long id;
     private WebSocketSession session;
     private String realm;
     @Builder.Default private int sessionTimeout = 120;

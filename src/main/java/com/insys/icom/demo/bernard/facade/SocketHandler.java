@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+import javax.jws.WebService;
 import javax.websocket.Session;
 
 @Component
@@ -123,14 +124,18 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private void sendWelcomeMessage(WebSocketSession session) throws IOException {
-        Message message = WelcomeMessage.builder()
-                .sessionId(new Long(session.getId()))
-                .details(WelcomeMessage.Details.builder()
-                        .sessionTimeout(120)
-                        .eventsTopic("events::devices")
-                        .build())
-                .build();
-        sendMessage(session, message);
+        Optional<WebSocketSessionInfo> sessionInfoOptional = WebSocketSessionInfo.findBySession(sessions, session);
+        if (sessionInfoOptional.isPresent()) {
+            WebSocketSessionInfo sessionInfo = sessionInfoOptional.get();
+            Message message = WelcomeMessage.builder()
+                    .sessionId(sessionInfo.getId())
+                    .details(WelcomeMessage.Details.builder()
+                            .sessionTimeout(120)
+                            .eventsTopic("events::devices")
+                            .build())
+                    .build();
+            sendMessage(session, message);
+        }
     }
 
     private void sendPublishedMessage(WebSocketSession session, Long requestId) throws IOException {
@@ -143,7 +148,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     private long getRandomLong() {
         long leftLimit = 1L;
-        long rightLimit = Long.MAX_VALUE;
+        long rightLimit = 65536L;
         return leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
     }
 
@@ -155,19 +160,32 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         //the messages will be broadcasted to all users.
-        sessions.add(WebSocketSessionInfo.builder().session(session).build());
-        log.debug("Session started: " + session.getId());
+        WebSocketSessionInfo sessionInfo = WebSocketSessionInfo.builder()
+                .id(getRandomLong())
+                .session(session)
+                .build();
+        sessions.add(sessionInfo);
+
+        log.debug("Session started: " + sessionInfo.getId());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         //super.afterConnectionClosed(session, status);
-        sessions.forEach(sessionInfo -> {
+        /*sessions.forEach(sessionInfo -> {
             if (sessionInfo.getSession() == session) {
                 sessions.remove(sessionInfo);
             }
-        });
+        });*/
+        Optional<WebSocketSessionInfo> sessionInfoOptional = WebSocketSessionInfo.findBySession(sessions, session);
+        if (sessionInfoOptional.isPresent()) {
+            WebSocketSessionInfo sessionInfo = sessionInfoOptional.get();
+            sessions.remove(sessionInfo);
+            log.debug("Session terminated: " + sessionInfo.getId() + ", Reason: " + status.getReason());
+        }
+        else {
+            log.debug("Session terminated: Unknown");
+        }
 
-        log.debug("Session terminated: " + session.getId() + ", Reason: " + status.getReason());
     }
 }
